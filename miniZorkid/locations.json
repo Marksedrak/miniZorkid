@@ -1,0 +1,46 @@
+{
+  "locations": [
+    {
+      "id": 1,
+      "name": "Operation Room",
+      "description": "A square-shaped operation room with only one set of doors, an operating table, and a mirror",
+      "exits": [
+        {
+          "direction": "north",
+          "destination": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Hallway Middle",
+      "description": "a long horizontal hallway stretching into darkness as lights flicker above your head.",
+      "exits": [
+        {
+          "direction": "east",
+          "destination": 3
+        },
+        {
+          "direction": "back",
+          "destination": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Hallway East 1",
+      "description": "a long hallway with two doors on the left leading to the Men's and Ladies' bathrooms, and one door on the right with a sign that reads \"Janitor's Closet\"",
+      "exits": [
+        {
+          "destination": 2,
+          "direction": "west"
+        },
+        {
+          "direction": "back",
+          "destination": 2
+        }
+      ]
+    }
+
+  ]
+}
