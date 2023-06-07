@@ -18,6 +18,10 @@ const unordered_set<string> help_keywords = {
     "h", "help", ""
 };
 
+const unordered_set<string> quit_commands = {
+    "q", "quit", "exit"
+};
+
 string takeUserInput()
 {
     string command;
@@ -142,13 +146,8 @@ string cehckAction(string input) {
 * Function to Navigate player through the different areas of the game.
 */
 int navigate(int currentPosition, string chosenDirection) {
-    cout << currentPosition << endl;
-    cout << chosenDirection << endl;
 
     for (const auto& exit : locationMap[currentPosition].exits) {
-        
-        cout << exit.first << " " << exit.second << endl;
-
         if (exit.first == chosenDirection)
             return exit.second;
     }
@@ -199,8 +198,9 @@ int main()
         cout << endl;
 
         // Check if user wants to quit the game
-        if (userInput == "quit" || userInput == "q")
+        if (quit_commands.count(userInput) > 0)
         {
+            cout << "\tExitting the Game Thank You For Playing\n\n\n";
             break;
         }
 
@@ -231,7 +231,7 @@ int main()
         }
         else
         {
-            cout << " * Action in development, it will be added soon promise * \n";
+            cout << "\t* Action in development, it will be added soon promise * \n\n\n";
         }
     };
     return 0;
