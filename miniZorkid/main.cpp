@@ -161,17 +161,22 @@ int main()
     string welcomeText = 
         "\n\tWelcome to Mini Zork.\n\n"
         "\tYou wake up in a surgery room wearing a patient\'s gown\n"
-        "\tThe square shaped room seems a bit claustrophobic\n\n";
+        "\tThe square shaped room seems a bit claustrophobic\n"
+        "\t********************************************************\n\n";
 
     // Basic Instructions on navigating the game
-    const string instructions = 
-        "\tTo navigate through the vast world of Mini Zork, you can type commands like \"go north\" or \"go east\"\n\t(Qutoations not required) to traverse to the next area\n"
-        "\tYou can also type \"go back\" to return to last area\n"
-        "\tIf at anytime you need help with these commands, type 'H'\n\n";
+    const string instructions =
+        "\t******************************************************************\n"
+        "\t*    To navigate through the vast world of Mini Zork,            *\n"
+        "\t*    you can type commands like \"go north\" or \"go east\"          *\n"
+        "\t*    (Qutoations not required) to traverse to the next area      *\n"
+        "\t*     You can also type \"go back\" to return to last area         *\n"
+        "\t*   If at anytime you need help with these commands, type 'H'    *\n"
+        "\t******************************************************************\n\n\n";
 
     // Printing out Welcome text and instructions
-    cout << instructions;
     cout << welcomeText;
+    cout << instructions;
 
     // Loading locations into areas vector from "locations.json"
     if (loadLocations() != 0) {
@@ -189,7 +194,8 @@ int main()
 
     while (true)
     {
-        cout << "\t" << locationMap[playerLocationId].descrition << endl << endl;
+        cout << "\t" << locationMap[playerLocationId].name << ":" << endl
+            << "\t" << locationMap[playerLocationId].descrition << endl;
 
         cout << "> ";
 
@@ -213,8 +219,7 @@ int main()
                 last_location = playerLocationId;
                 playerLocationId = navigate(playerLocationId, action.substr(2));
                 if (playerLocationId == last_location) {
-                    cout << "\n\tThere is nothing in that direction.\n\t" << playerLocationId << endl << endl;
-
+                    cout << "\n\tThere is nothing in that direction.\n\n";
                 }
             }
         }
