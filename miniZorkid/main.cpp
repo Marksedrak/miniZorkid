@@ -104,7 +104,7 @@ int loadLocations() {
     and gets the action specified by the user and returns the proper
     string
 */
-string cehckAction(string input) {
+string checkAction(string input) {
 
     // Creating unordered set with all available directions.
     string direction;
@@ -158,25 +158,28 @@ int main()
 {
 
     // Welcom text for the user
-    string welcomeText = 
-        "\n\tWelcome to Mini Zork.\n\n"
-        "\tYou wake up in a surgery room wearing a patient\'s gown\n"
-        "\tThe square shaped room seems a bit claustrophobic\n"
-        "\t********************************************************\n\n";
+    const string welcomeText =
+        "\n\tWelcome to Mini Zork.\n\n";
 
     // Basic Instructions on navigating the game
     const string instructions =
         "\t******************************************************************\n"
-        "\t*    To navigate through the vast world of Mini Zork,            *\n"
-        "\t*    you can type commands like \"go north\" or \"go east\"          *\n"
-        "\t*    (Qutoations not required) to traverse to the next area      *\n"
-        "\t*     You can also type \"go back\" to return to last area         *\n"
-        "\t*   If at anytime you need help with these commands, type 'H'    *\n"
+        "\t*       To navigate through the vast world of Mini Zork,         *\n"
+        "\t*       you can type commands like \"go north\" or \"go east\"       *\n"
+        "\t*                 (Qutoations not required)                      *\n"
+        "\t*        You can also type \"go back\" to return to last area      *\n"
+        "\t*                                                                *\n"
+        "\t*         If at anytime you need help with these commands,       *\n"
+        "\t*                  type 'H' or \"help\"                            *\n"
         "\t******************************************************************\n\n\n";
 
-    // Printing out Welcome text and instructions
-    cout << welcomeText;
-    cout << instructions;
+    const string gameBeginning = "\tYou wake up in a surgery room wearing a patient\'s gown\n"
+        "\tThe square shaped room seems a bit claustrophobic\n"
+        "\t********************************************************\n\n";
+
+    // Printing out Welcome text, instructions, and beginning text
+    cout << welcomeText << instructions << gameBeginning;
+
 
     // Loading locations into areas vector from "locations.json"
     if (loadLocations() != 0) {
@@ -192,10 +195,11 @@ int main()
     // string to capture user commands within the game
     string userInput;
 
+    // GAME START
     while (true)
     {
-        cout << "\t" << locationMap[playerLocationId].name << ":" << endl
-            << "\t" << locationMap[playerLocationId].descrition << endl;
+        cout << "\t" << locationMap[playerLocationId].name << ":" << endl << endl
+            << "\t" << locationMap[playerLocationId].descrition << endl << endl;
 
         cout << "> ";
 
@@ -211,7 +215,7 @@ int main()
         }
 
         // *Temporary* checks if the user has entered "GO" 
-        string action = cehckAction(userInput);
+        string action = checkAction(userInput);
 
         // If an action (GO) was entered use navigate
         if (action != "") {
@@ -236,7 +240,7 @@ int main()
         }
         else
         {
-            cout << "\t* Action in development, it will be added soon promise * \n\n\n";
+            cout << "\t* Action in development, it will be added soon promise *\n\n\n";
         }
     };
     return 0;
