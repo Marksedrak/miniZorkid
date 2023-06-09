@@ -5,11 +5,12 @@ Hello and welcome to Mini Zork.
 
 **Before you start playing the game you need to run the following commands in a command prompt:
 **
-
+<code>
 git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.sh
 ./vcpkg integrate install
 ./vcpkg install jsoncpp
+</code>
 
 Now you should be able to run the game and play it. Have Fun!
