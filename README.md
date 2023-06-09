@@ -5,6 +5,7 @@ Hello and welcome to Mini Zork.
 
 **Before you start playing the game you need to run the following commands in a command prompt:
 **
+
 git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.sh
