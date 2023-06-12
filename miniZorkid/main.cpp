@@ -14,18 +14,29 @@ const unordered_set<string> directionSet = {
     "north", "south", "east", "west", "back", "forward", "backward", "left", "right"
 };
 
+// Set of possible inputs to receive help
 const unordered_set<string> help_keywords = {
     "h", "help", ""
 };
 
+// Set of possible inputs to quit program (Exit game).
 const unordered_set<string> quit_commands = {
     "q", "quit", "exit"
 };
 
+/*
+* 
+*   Function Name:  takeUserInput
+*   Parameters:     None
+*   Description:    reads user's input from console
+*                   and transforms all text to lower-case
+*                   to allow for case-insensitive inputs.
+*            
+*/
 string takeUserInput()
 {
     string command;
-
+    cout << "\t>";
     getline(cin, command);
 
     if (command == "")
@@ -35,25 +46,58 @@ string takeUserInput()
         int i;
         for (i = 0; i < command.length(); i++)
         {
-            command[i] = tolower(command[i]);
+            command[i] = ::tolower(command[i]);
         }
 
         return command;
     }
 }
 
-struct Location
+class Location
 {
     int id;
     string name;
-    string descrition;
+    bool accessable = true;
+    vector<string> description;
     vector<pair<string,int>> exits;
 };
 
+struct UsableItems
+{
+    int id;
+    string name;
+    string description;
+    vector<pair<int, int>> use;
+};
+
+struct InteractItems
+{
+    int id;
+    string name;
+    string description;
+    int locationId;
+    bool active;
+    int alreadyUsedEvent;
+};
+
+
+struct EventScene
+{
+    int id;
+    vector<string> eventScenario;
+};
+
+vector <UsableItems> useItems;
+vector <InteractItems> interactItems;
+vector <EventScene> events;
 vector<Location> areas;
 
 unordered_map <int, Location> locationMap;
 
+/*
+*   Function Name:  loadLocations
+*   Description:    Loads the location.json file into the game's data.
+*/
 int loadLocations() {
     ifstream configFile("locations.json");
 
@@ -75,23 +119,22 @@ int loadLocations() {
     // Creates areas and populating the fields using the json data
     for (const Json::Value& locationData : locationArray) {
         Location area;
-        area.descrition = locationData["description"].asString();
         area.name = locationData["name"].asString();
         area.id = locationData["id"].asInt();
+        area.accessable = locationData["accessable"].asBool();
         
+        // For loop to populate string vector for description
+        for (const Json::Value& descriptions : locationData["description"]) {
+            area.description.push_back(descriptions.asString());
+        };
+        
+        // For loop to populate vector pair for exits containing
+        // direction and destination
         for (const Json::Value& exit : locationData["exits"]) {
             area.exits.push_back(make_pair(exit["direction"].asString(), exit["destination"].asInt()));
         };
 
         locationMap[area.id] = area;
-
-        /*cout << "Location: " << area.name << endl;
-        cout << "Descritption: " << area.descrition << endl;
-        cout << "Exits: " << endl;
-        for (pair<string, int> exit : area.exits) {
-            cout << exit.first << " at which reaches id: " << exit.second << endl;
-        }
-        cout << endl;*/
 
         areas.push_back(area);
     }
@@ -100,9 +143,54 @@ int loadLocations() {
 }
 
 /*
-    readUserInput takes the user's input after processing it
-    and gets the action specified by the user and returns the proper
-    string
+*   Function Name:  centerVectorString
+*   Parameters:     vetor<string> rawVectorString: vector string to be centered
+*   Description:    Creates a centered version of the input vector string
+*                   and returns the centered vector of strings
+*/
+vector<string> centerVectorString(vector<string> rawVectorString) {
+
+    int width = 125;
+
+    //for (const string& str : rawVectorString) {
+    //    maxLength = max(maxLength,  int(str.length()));
+    //}
+    vector<string> centeredVectorString;
+
+    for (const string& str : rawVectorString) {
+        int strLength = static_cast<int>(str.length());
+        int padding = abs(((width - strLength) / 2));
+        if (padding % 2 != 0) {
+            padding++;
+        }
+        string centerString = string(padding, ' ') + str;
+        centeredVectorString.push_back(centerString);
+    }
+
+    return centeredVectorString;
+
+}
+
+/*
+*   Function that prints the input vector string
+*/
+void printVector(vector<string> inputVectorString) {
+    for (const string& str : inputVectorString) {
+        cout << str;
+    }
+    cout << endl;
+}
+
+
+/*
+* 
+*   Function Name:  checkAction
+*   Parameters:     string input
+*   Description:
+            *       Takes the user's input after processing it
+            *       through takeUserInput and checks if the player
+            *       entered a valid action.
+*
 */
 string checkAction(string input) {
 
@@ -158,27 +246,35 @@ int main()
 {
 
     // Welcom text for the user
-    const string welcomeText =
-        "\n\tWelcome to Mini Zork.\n\n";
+    const vector <string> welcomeText = {
+        "\n\t\t\t\tWelcome to Mini Zork.\n\n"
+    };
 
     // Basic Instructions on navigating the game
-    const string instructions =
-        "\t******************************************************************\n"
-        "\t*       To navigate through the vast world of Mini Zork,         *\n"
-        "\t*       you can type commands like \"go north\" or \"go east\"       *\n"
-        "\t*                 (Qutoations not required)                      *\n"
-        "\t*        You can also type \"go back\" to return to last area      *\n"
-        "\t*                                                                *\n"
-        "\t*         If at anytime you need help with these commands,       *\n"
-        "\t*                  type 'H' or \"help\"                            *\n"
-        "\t******************************************************************\n\n\n";
+    const vector <string> instructions = {
+        "******************************************************************\n",
+        "*       To navigate through the vast world of Mini Zork,         *\n",
+        "*       you can type commands like \"go north\" or \"go east\"       *\n",
+        "*                 (Qutoations not required)                      *\n",
+        "*        You can also type \"go back\" to return to last area      *\n",
+        "*                                                                *\n",
+        "*         If at anytime you need help with these commands,       *\n",
+        "*                  type 'H' or \"help\"                            *\n",
+        "******************************************************************\n",
+        "\n\n"
+    };
 
-    const string gameBeginning = "\tYou wake up in a surgery room wearing a patient\'s gown\n"
-        "\tThe square shaped room seems a bit claustrophobic\n"
-        "\t********************************************************\n\n";
-
+    string str1 = "You are in a square shaped operation room with nothing arround you except for the bed you woke up on";
+    
+    const vector <string> gameBeginning = { 
+        "You wake up in a surgery room wearing a patient\'s gown\n",
+        "The square shaped room seems a bit claustrophobic\n",
+        "********************************************************\n\n"
+    };
     // Printing out Welcome text, instructions, and beginning text
-    cout << welcomeText << instructions << gameBeginning;
+    printVector(centerVectorString(welcomeText));
+    printVector(centerVectorString(instructions));
+    printVector(centerVectorString(gameBeginning));
 
 
     // Loading locations into areas vector from "locations.json"
@@ -198,10 +294,8 @@ int main()
     // GAME START
     while (true)
     {
-        cout << "\t" << locationMap[playerLocationId].name << ":" << endl << endl
-            << "\t" << locationMap[playerLocationId].descrition << endl << endl;
-
-        cout << "> ";
+        cout << "\t\t" << locationMap[playerLocationId].name << ":" << endl << endl;
+        printVector(centerVectorString(locationMap[playerLocationId].description));
 
         // converts all input to lowercase for easier processing
         userInput = takeUserInput();
@@ -210,7 +304,7 @@ int main()
         // Check if user wants to quit the game
         if (quit_commands.count(userInput) > 0)
         {
-            cout << "\tExitting the Game Thank You For Playing\n\n\n";
+            cout << "Exitting the Game Thank You For Playing\n\n\n";
             break;
         }
 
@@ -223,24 +317,23 @@ int main()
                 last_location = playerLocationId;
                 playerLocationId = navigate(playerLocationId, action.substr(2));
                 if (playerLocationId == last_location) {
-                    cout << "\n\tThere is nothing in that direction.\n\n";
+                    cout << "\n\n\t\tThere is nothing in that direction.\n\n";
                 }
             }
         }
         else if (help_keywords.count(userInput) > 0)
         {
-            cout << "> Do you need Help? (Y/n)\n";
-            cout << "> ";
+            cout << "\n\t\tDo you need Help? (Y/n)\n";
             userInput = takeUserInput();
             if (userInput == "" || userInput == "y")
             {
-                cout << instructions;
+                printVector(instructions);
             }
             continue;
         }
         else
         {
-            cout << "\t* Action in development, it will be added soon promise *\n\n\n";
+            cout << "* Action in development, it will be added soon promise *\n\n\n";
         }
     };
     return 0;

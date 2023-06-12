@@ -3,18 +3,34 @@
     {
       "id": 1,
       "name": "Operation Room",
-      "description": "You are in a square shaped operation room with nothing arround you except for the bed you woke up on\n\tand a mirror to your left staring straight at you. There are double doors to the north\n\tof you as the only exit from this room",
-      "exits": [
-        {
-          "direction": "north",
-          "destination": 2
-        }
-      ]
+      "accessable": true,
+      "items": [
+        201
+      ],
+      "description": [
+        "You are in a square shaped operation room with nothing arround you except for the bed you woke up on\n",
+        "and a mirror to your left staring straight at you. There are double doors to the north\n",
+        "of you as the only exit from this room.\n"
+      ],
+        "exits"
+        :
+        [
+          {
+            "direction": "north",
+            "destination": 2
+          }
+        ]
     },
     {
       "id": 2,
       "name": "Hallway Middle",
-      "description": "You reach a long, horizontal hallway with darkness to the left and right (west and east) of you.\n\tAn ominous, mysterious silence fills the hallway as a flickering light above you sets the mood.\n\tYou can barely identify a door to your left (west) but it seems to be barricaded.\n\tTo your right, you can see another flickering light in the distance.",
+      "accessable": true,
+      "description": [
+        "You reach a long, horizontal hallway with darkness to the left and right (west and east) of you.\n",
+        "An ominous, mysterious silence fills the hallway as a flickering light above you sets the mood.\n",
+        "You can barely identify a door to your left (west) but it seems to be barricaded.\n",
+        "To your right, you can see another flickering light in the distance.\n"
+      ],
       "exits": [
         {
           "direction": "east",
@@ -23,13 +39,21 @@
         {
           "direction": "back",
           "destination": 1
+        },
+        {
+          "direction": "south",
+          "destination": 1
         }
       ]
     },
     {
       "id": 3,
       "name": "Hallway East 1",
-      "description": "You reach another flickering light in the long hallway with two doors on the left leading to the Men's and \n\tLadies' bathrooms, and one door on the right with a sign that reads \"Janitor's Closet\"",
+      "accessable": true,
+      "description": [
+        "You reach another flickering light in the long hallway with two doors on the left leading to the Men's and \n",
+        "Ladies' bathrooms, and one door on the right with a sign that reads \"Janitor's Closet\"\n"
+      ],
       "exits": [
         {
           "destination": 2,
