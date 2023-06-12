@@ -6,6 +6,7 @@
 #include <json/json.h>
 #include <unordered_set>
 #include <unordered_map>
+#include "World.h"
 
 using namespace std;
 
@@ -48,19 +49,10 @@ string takeUserInput()
         {
             command[i] = ::tolower(command[i]);
         }
-
         return command;
     }
 }
 
-class Location
-{
-    int id;
-    string name;
-    bool accessable = true;
-    vector<string> description;
-    vector<pair<string,int>> exits;
-};
 
 struct UsableItems
 {
@@ -90,22 +82,23 @@ struct EventScene
 vector <UsableItems> useItems;
 vector <InteractItems> interactItems;
 vector <EventScene> events;
-vector<Location> areas;
 
 unordered_map <int, Location> locationMap;
+
+World world;
 
 /*
 *   Function Name:  loadLocations
 *   Description:    Loads the location.json file into the game's data.
 */
-int loadLocations() {
+bool loadLocations() {
     ifstream configFile("locations.json");
 
     //Check location.json was opened properly
     if (!configFile)
     {
         cout << "Error opening game file (locations.json)." << endl;
-        return 1;
+        return false;
     }
 
     // Parsing the JSON data for use in main later
@@ -118,28 +111,31 @@ int loadLocations() {
 
     // Creates areas and populating the fields using the json data
     for (const Json::Value& locationData : locationArray) {
-        Location area;
-        area.name = locationData["name"].asString();
-        area.id = locationData["id"].asInt();
-        area.accessable = locationData["accessable"].asBool();
+        string name = locationData["name"].asString();
+        int id = locationData["id"].asInt();
+        bool accessible = locationData["accessable"].asBool();
         
+        vector<string> disc;
         // For loop to populate string vector for description
         for (const Json::Value& descriptions : locationData["description"]) {
-            area.description.push_back(descriptions.asString());
+            disc.push_back(descriptions.asString());
         };
         
         // For loop to populate vector pair for exits containing
         // direction and destination
+        vector<pair<string, int>> exits;
         for (const Json::Value& exit : locationData["exits"]) {
-            area.exits.push_back(make_pair(exit["direction"].asString(), exit["destination"].asInt()));
+            exits.push_back(make_pair(exit["direction"].asString(), exit["destination"].asInt()));
         };
 
-        locationMap[area.id] = area;
+        Location area(id, name, accessible, disc, exits);
 
-        areas.push_back(area);
+        locationMap[area.getLocationId()] = area;
+
+        world.add_location(area);
     }
 
-    return 0;
+    return true;
 }
 
 /*
@@ -235,7 +231,7 @@ string checkAction(string input) {
 */
 int navigate(int currentPosition, string chosenDirection) {
 
-    for (const auto& exit : locationMap[currentPosition].exits) {
+    for (const auto& exit : locationMap[currentPosition].getLocatExits()) {
         if (exit.first == chosenDirection)
             return exit.second;
     }
@@ -278,7 +274,7 @@ int main()
 
 
     // Loading locations into areas vector from "locations.json"
-    if (loadLocations() != 0) {
+    if (!loadLocations()) {
         return 1;
     }
 
@@ -294,8 +290,8 @@ int main()
     // GAME START
     while (true)
     {
-        cout << "\t\t" << locationMap[playerLocationId].name << ":" << endl << endl;
-        printVector(centerVectorString(locationMap[playerLocationId].description));
+        cout << "\t\t" << locationMap[playerLocationId].getLocationName() << ":" << endl << endl;
+        printVector(centerVectorString(locationMap[playerLocationId].getLocatDesc()));
 
         // converts all input to lowercase for easier processing
         userInput = takeUserInput();
@@ -304,7 +300,7 @@ int main()
         // Check if user wants to quit the game
         if (quit_commands.count(userInput) > 0)
         {
-            cout << "Exitting the Game Thank You For Playing\n\n\n";
+            cout << "\t\t\tExitting the Game Thank You For Playing\n\n\n";
             break;
         }
 

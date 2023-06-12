@@ -8,13 +8,15 @@ class Location
 	private:
 		int locationId;
 		string locationName;
+		bool accessible;
 		vector<string> locationDesc;
 		vector<pair<string, int>> locationExits;
 
 	public:
-		Location initLocation(int Id, string name, vector<string> description, vector<pair<string, int>> exit) {
+		Location(int Id = 1, string name = "First Room", bool access = true, vector<string> description = { "Initial Room of the Game" }, vector<pair<string, int>> exit = {}) {
 			locationId = Id;
 			locationName = name;
+			accessible = access;
 			locationDesc = description;
 			locationExits = exit;
 		}
@@ -25,6 +27,10 @@ class Location
 
 		string getLocationName() {
 			return locationName;
+		}
+
+		bool checkAccessible() {
+			return accessible;
 		}
 
 		vector<string> getLocatDesc() {
