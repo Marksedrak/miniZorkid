@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include "World.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -25,33 +26,33 @@ const unordered_set<string> quit_commands = {
     "q", "quit", "exit"
 };
 
-/*
-* 
-*   Function Name:  takeUserInput
-*   Parameters:     None
-*   Description:    reads user's input from console
-*                   and transforms all text to lower-case
-*                   to allow for case-insensitive inputs.
-*            
-*/
-string takeUserInput()
-{
-    string command;
-    cout << "\t>";
-    getline(cin, command);
-
-    if (command == "")
-        return "";
-    else
-    {
-        int i;
-        for (i = 0; i < command.length(); i++)
-        {
-            command[i] = ::tolower(command[i]);
-        }
-        return command;
-    }
-}
+///*
+//* 
+//*   Function Name:  takeUserInput
+//*   Parameters:     None
+//*   Description:    reads user's input from console
+//*                   and transforms all text to lower-case
+//*                   to allow for case-insensitive inputs.
+//*            
+//*/
+//string takeUserInput()
+//{
+//    string command;
+//    cout << "\t>";
+//    getline(cin, command);
+//
+//    if (command == "")
+//        return "";
+//    else
+//    {
+//        int i;
+//        for (i = 0; i < command.length(); i++)
+//        {
+//            command[i] = ::tolower(command[i]);
+//        }
+//        return command;
+//    }
+//}
 
 
 struct UsableItems
@@ -128,7 +129,7 @@ bool loadLocations() {
             exits.push_back(make_pair(exit["direction"].asString(), exit["destination"].asInt()));
         };
 
-        Location area(id, name, accessible, disc, exits);
+        Location area(id, name, accessible, {},  disc, exits);
 
         locationMap[area.getLocationId()] = area;
 
@@ -278,6 +279,8 @@ int main()
         return 1;
     }
 
+    Game game;
+
     // set player's starting position to the first room's id
     int playerLocationId = 1;
 
@@ -294,7 +297,8 @@ int main()
         printVector(centerVectorString(locationMap[playerLocationId].getLocatDesc()));
 
         // converts all input to lowercase for easier processing
-        userInput = takeUserInput();
+        game.takeUserInput();
+        userInput = game.playerInput;
         cout << endl;
 
         // Check if user wants to quit the game
@@ -320,7 +324,8 @@ int main()
         else if (help_keywords.count(userInput) > 0)
         {
             cout << "\n\t\tDo you need Help? (Y/n)\n";
-            userInput = takeUserInput();
+            game.takeUserInput();
+            userInput = game.playerInput;
             if (userInput == "" || userInput == "y")
             {
                 printVector(instructions);
