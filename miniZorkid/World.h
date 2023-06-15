@@ -1,4 +1,5 @@
 #include<vector>
+#include<iostream>
 #include"Location.h"
 #include"Direction.h"
 
@@ -27,6 +28,19 @@ class World
 
 		vector<Location> get_locations() {
 			return areas;
+		}
+
+		void printWorld() {
+			for (Location& location : areas) {
+				cout << location.getLocationName() << ": " << endl;
+				cout << "ID: " << endl << location.getLocationId() << endl;
+				cout << "Exits: " << endl;
+				for (auto exit : location.getLocatExits()) {
+					cout << "direction: " << exit.first << endl;
+					cout << "destination: " << exit.second << endl;
+				}
+				cout << endl;
+			}
 		}
 };
 

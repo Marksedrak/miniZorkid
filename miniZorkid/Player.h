@@ -6,12 +6,13 @@
 class Player
 {
 	private:
+		int playerId;
 		Location playerLocation;
 		Location lastLocation;
 		vector<Item> Inventory;
 
 	public:
-		Player(Location playerLocat = {}, Location last = {}, vector<Item> invent = {}) : playerLocation(playerLocat), Inventory(invent) {}
+		Player(int id, Location playerLocat = {}, Location last = {}, vector<Item> invent = {}) : playerId(id), playerLocation(playerLocat), Inventory(invent) {}
 
 		Location locate_Player() { return playerLocation; }
 

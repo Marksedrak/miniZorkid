@@ -3,9 +3,18 @@
     {
       "id": 1,
       "name": "Operation Room",
-      "accessable": true,
+      "accessible": true,
       "items": [
-        201
+        {
+          "name": "Scalpel",
+          "useable": true,
+          "description": "A small but very sharp scalpel, it could be useful."
+        },
+        {
+          "name": "Mirror",
+          "usable": false,
+          "description":  "A mirror with a tiny crack in it showing it's hollow on the inside."
+        }
       ],
       "description": [
         "You are in a square shaped operation room with nothing arround you except for the bed you woke up on\n",
@@ -16,7 +25,7 @@
         :
         [
           {
-            "direction": "north",
+            "direction": 1,
             "destination": 2
           }
         ]
@@ -24,7 +33,7 @@
     {
       "id": 2,
       "name": "Hallway Middle",
-      "accessable": true,
+      "accessible": true,
       "description": [
         "You reach a long, horizontal hallway with darkness to the left and right (west and east) of you.\n",
         "An ominous, mysterious silence fills the hallway as a flickering light above you sets the mood.\n",
@@ -33,23 +42,23 @@
       ],
       "exits": [
         {
-          "direction": "east",
+          "direction": 2,
           "destination": 3
         },
         {
-          "direction": "back",
+          "direction": 4,
           "destination": 1
         },
         {
-          "direction": "south",
-          "destination": 1
+          "direction": 3,
+          "destination": 4
         }
       ]
     },
     {
       "id": 3,
       "name": "Hallway East 1",
-      "accessable": true,
+      "accessible": true,
       "description": [
         "You reach another flickering light in the long hallway with two doors on the left leading to the Men's and \n",
         "Ladies' bathrooms, and one door on the right with a sign that reads \"Janitor's Closet\"\n"
@@ -57,11 +66,34 @@
       "exits": [
         {
           "destination": 2,
-          "direction": "west"
+          "direction": 3
         },
         {
-          "direction": "back",
+          "direction": 3,
           "destination": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Mysterious Room",
+      "accessible": false,
+      "description": [
+        "a mysterious room with nothing but darkness in sight, you slowly reach for a light switch\n",
+        "As the light turns on you see what looks like a command room with a large set of monitors.\n",
+        "In the center of the monitors, there is a leather chair with a long back.\n\n",
+        "The chair turns and you see a tall many sitting on the chair and he looks at you in the eyes\n",
+        "\"I am very impressed by your performance, you're the first to complete their trial\"\n\n",
+        "You look at the monitors and notice the monitors have other people in similar operation rooms.\n\n",
+        "The tall man continues \"You've been chosen for a confidential mission to explore the world of Zork,\n",
+        "You have completed your trial.\n",
+        "Congratulation!\"\n\n",
+        "You have completed the MiniZork demo, more is on the way, stay tuned.\n"
+      ],
+      "exits": [
+        {
+          "destination": 2,
+          "direction": 2
         }
       ]
     }

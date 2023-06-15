@@ -1,6 +1,7 @@
 #include<string>
 #include<vector>
 #include"Item.h"
+#include<iostream>
 #pragma once
 
 using namespace std;
@@ -44,6 +45,13 @@ class Location
 
 		vector<Item> itemsInLocation() {
 			return items;
+		}
+
+		void printItems() {
+			for (Item item : itemsInLocation()) {
+				cout << "\t\tThere is a " << item.get_itemName() << ":\n";
+				cout << "\t\t" << item.get_itemDesc() << endl;
+			}
 		}
 
 		vector<string> getLocatDesc() {

@@ -3,8 +3,6 @@
 #include<unordered_map>
 #include<unordered_set>
 #include"Direction.h"
-//Debugging includes
-#include<iostream>
 #pragma once
 
 using namespace std;
@@ -25,6 +23,8 @@ class Command
 
 		vector<string> get_Verbs(){ return verbs; }
 
+		string getFoundVerb() { return foundVerb; }
+
 		// Checks if entered command is in the list of commands
 		// created with the Command class
 		// also populates "found" which is the verb found in the
@@ -35,13 +35,10 @@ class Command
 			}
 			else 
 			{
-				string foundVerb;
 				for (const string& verb : verbs) {
 					auto itr = command.find(verb);
 					if (itr != command.npos) {
 						foundVerb = verb;
-						// Debugging
-						std::cout << foundVerb;
 						return true;
 					}
 				}
@@ -50,7 +47,7 @@ class Command
 		}
 
 		int checkCommandType() {
-			if (!this->checkCommand()) {
+			if (!checkCommand()) {
 				return 0;
 			}
 			else
@@ -75,12 +72,13 @@ class Command
 						}
 					}
 				}
+
 			}
 			return 0;
 		}
 
-		int operator()(int x) {
-			return x + 1;
+		int operator()(Directions direction) {
+			return static_cast<int>(direction);
 		}
 };
 
