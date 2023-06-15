@@ -1,5 +1,4 @@
 #pragma once
-
 enum class Directions
 {
 	north = 1,

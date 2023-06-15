@@ -10,31 +10,23 @@ class World
 
 	public:
 		// World constructor
-		World(vector<Location> locations = {}) : areas(locations) {}
+		World(vector<Location> locations = {}) {}
 
 		void add_location(const Location& location) {
 			areas.push_back(location);
 		}
 
-		Location get_location(int index) {
-			return areas[index];
+		Location get_location(const int& index) {
+			for (Location& area : areas) {
+				if (area.getLocationId() == index) {
+					return area;
+				}
+			}
+			return {};
 		}
 
-
-
-		//Location navigateTo(Location& current, string direction) {
-		//	vector<pair<string, int>> currentExits = current.getLocatExits();
-
-		//	for (const pair<string, int> exit : currentExits) {
-		//		if (direction >= static_cast<int>(Directions::north) && direction == Directions::south) {
-		//			switch (direction)
-		//			{
-		//			case 1:
-
-		//				break;
-		//			}
-		//		}
-		//	}
-		//}
+		vector<Location> get_locations() {
+			return areas;
+		}
 };
 

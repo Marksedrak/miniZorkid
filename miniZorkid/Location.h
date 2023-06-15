@@ -12,7 +12,7 @@ class Location
 		bool accessible;
 		vector<Item> items;
 		vector<string> locationDesc;
-		vector<pair<string, int>> locationExits;
+		vector<pair<int, int>> locationExits;
 
 	public:
 		Location(
@@ -21,7 +21,7 @@ class Location
 			bool access = true,
 			vector<Item> itemsHere = {},
 			vector<string> description= { "Initial Room of the Game" },
-			vector<pair<string,int>> exit = {}) {
+			vector<pair<int,int>> exit = {}) {
 				locationId = Id;
 				locationName = name;
 				accessible = access;
@@ -50,7 +50,7 @@ class Location
 			return locationDesc;
 		}
 
-		vector<pair<string, int>> getLocatExits() {
+		vector<pair<int, int>> getLocatExits() {
 			return locationExits;
 		}
 };
