@@ -6,14 +6,21 @@
       "accessible": true,
       "items": [
         {
-          "name": "Scalpel",
-          "useable": true,
-          "description": "A small but very sharp scalpel, it could be useful."
-        },
-        {
-          "name": "Mirror",
-          "usable": false,
-          "description":  "A mirror with a tiny crack in it showing it's hollow on the inside."
+          "type": 2,
+          "name": "mirror",
+          "locked": true,
+          "opened": "You crack the mirror with the hammer, and see look inside to find.\n",
+          "fail": "The mirror is unaffected, maybe use another item.\n",
+          "contained": [
+            {
+              "type": 1,
+              "name": "bronze key",
+              "usable": true,
+              "useOn": "bronze door",
+              "description": "A bronze ancient key with the strange symbol on the handle which looks almost like a snake biting it's tail.\n"
+            }
+          ],
+          "description": "A mirror with a tiny crack in it showing there might be something on the inside.\n"
         }
       ],
       "description": [
@@ -34,11 +41,21 @@
       "id": 2,
       "name": "Hallway Middle",
       "accessible": true,
+      "items": [
+        {
+          "type": 3,
+          "direction": 3,
+          "name": "bronze door",
+          "locked": true,
+          "opened": "You open the large Bronze Door\n",
+          "description": "A large bronze door"
+        }
+      ],
       "description": [
-        "You reach a long, horizontal hallway with darkness to the left and right (west and east) of you.\n",
+        "You reach a long, horizontal hallway with darkness to the left (west) and right (east) of you.\n",
         "An ominous, mysterious silence fills the hallway as a flickering light above you sets the mood.\n",
-        "You can barely identify a door to your left (west) but it seems to be barricaded.\n",
-        "To your right, you can see another flickering light in the distance.\n"
+        "You can barely a bronze door to your west but it seems to be locked.\n",
+        "To your east, you can see another flickering light in the distance.\n"
       ],
       "exits": [
         {
@@ -57,11 +74,21 @@
     },
     {
       "id": 3,
-      "name": "Hallway East 1",
+      "name": "Hallway East",
       "accessible": true,
+      "items": [
+        {
+          "type": 3,
+          "direction": 4,
+          "name": "Janitor's Closet Door",
+          "locked": false,
+          "opened": "You open the large Bronze Door\n",
+          "description": "A very generic door with a small sign which says \"Janitor's Closet\"\n"
+        }
+      ],
       "description": [
-        "You reach another flickering light in the long hallway with two doors on the left leading to the Men's and \n",
-        "Ladies' bathrooms, and one door on the right with a sign that reads \"Janitor's Closet\"\n"
+        "You reach another flickering light in the long hallway with nothing around except for\n",
+        "one door to the south with a sign that reads \"Janitor's Closet\"\n"
       ],
       "exits": [
         {
@@ -69,8 +96,8 @@
           "direction": 3
         },
         {
-          "direction": 3,
-          "destination": 2
+          "direction": 4,
+          "destination": 5
         }
       ]
     },
@@ -89,6 +116,29 @@
         "You have completed your trial.\n",
         "Congratulation!\"\n\n",
         "You have completed the MiniZork demo, more is on the way, stay tuned.\n"
+      ],
+      "exits": [
+        {
+          "destination": 2,
+          "direction": 2
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Janitor's Closet",
+      "accessible": true,
+      "items": [
+        {
+          "type": 1,
+          "name": "hammer",
+          "useable": true,
+          "description": "A surgical hammer which looks small but mighty.",
+          "useOn": "mirror"
+        }
+      ],
+      "description": [
+        "A very normal Janitor's Closet with barely anything in sight\n"
       ],
       "exits": [
         {

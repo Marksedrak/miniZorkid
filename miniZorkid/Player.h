@@ -25,8 +25,8 @@ class Player
 			playerLocation = destination;
 		}
 
-		bool didNotMove() {
-			return lastLocation.getLocationId() == playerLocation.getLocationId();
+		bool didNotMove(Location current) {
+			return current.getLocationId() == playerLocation.getLocationId();
 		}
 
 		vector<string> getInventItems() {

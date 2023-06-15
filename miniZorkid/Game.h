@@ -94,6 +94,58 @@ public:
             }
         }
 
+        /// <summary>
+        ///     Function loads items in a location using their specific type as reference
+        /// </summary>
+        /// <param name="locationData">
+        ///     locationData is a reference to a Value in the json file    
+        /// </param>
+        /// <param name="container">
+        ///     container is the name of the member of which the items are located
+        /// </param>
+        /// <returns>
+        ///     Returns a vector of Items in each location.
+        /// </returns>
+        vector<Item> loadItems(const Json::Value& locationData, string container) {
+            vector<Item> locationItems;
+            for (const Json::Value& items : locationData[container]) {
+                int type = items["type"].asInt();
+                Item item;
+                string name, description, useOn, opened, fail;
+                bool locked, useable;
+                vector<Item> contained;
+
+                switch (type)
+                {
+                case 1:
+                    name = items["name"].asString();
+                    useable = items["useable"].asBool();
+                    useOn = items["useOn"].asString();
+                    description = items["description"].asString();
+                    item = item.createObject(name, useable, useOn, description);
+                    break;
+                case 2:     name = items["name"].asString();
+                    description = items["description"].asString();
+                    locked = items["locked"].asBool();
+                    opened = items["opened"].asString();
+                    fail = items["fail"].asString();
+                    contained = loadItems(items, "contained");
+                    item = item.createContainer(name, locked, opened, fail, contained, description);
+                    break;
+                case 3:   name = items["name"].asString();
+                    int direction = items["direction"].asInt();
+                    description = items["description"].asString();
+                    locked = items["locked"].asBool();
+                    opened = items["opened"].asString();
+                    item = item.createDoor(name, direction, locked, opened, description);
+                    break;
+                }
+                locationItems.push_back(item);
+            }
+            return locationItems;
+        }
+
+
         /*
         *   Function Name:  loadLocations
         *   Description:    Loads the location.json file into the game's data.
@@ -117,16 +169,10 @@ public:
                     int id = locationData["id"].asInt();
                     bool accessible = locationData["accessible"].asBool();
 
+                    // Checks if this location has items and loops through if it does
                     vector<Item> locationItems;
-                    // loop through items in location
                     if (locationData.isMember("items")) {
-                        for (const Json::Value& items : locationData["items"]) {
-                            string name = items["name"].asString();
-                            bool useable = items["useable"].asBool();
-                            string description = items["description"].asString();
-                            Item item(name, useable, description);
-                            locationItems.push_back(item);
-                        }
+                        locationItems = loadItems(locationData, "items");
                     }
                     vector<string> disc;
                     // For loop to populate string vector for description
@@ -191,27 +237,7 @@ public:
                 // Check which type of command is entered
                 int action = command.checkCommandType();
             
-                switch (action)
-                {
-                case 0:     cout << "\n\t\tNo Command Detected\n\n";
-                            break;
-                case -1:    endGame();
-                            break;
-                case -2:    getHelp();
-                            break;
-                case 1:     navigate(command(Directions::north));
-                            break;
-                case 2:     navigate(command(Directions::east));
-                            break;
-                case 3:     navigate(static_cast<int>(Directions::west));
-                            break;
-                case 4:     navigate(static_cast<int>(Directions::south));
-                            break;
-
-                default:
-                    cout << "* Action in development, it will be added soon promise *\n\n\n";
-                    break;
-                }
+                executeCommand(command, action);
             };
             return true;
         }
@@ -255,6 +281,7 @@ public:
         // Navigate through the world
         void navigate(int direction) {
             Location currentLocation = gamePlayer.locate_Player();
+            bool blocked = false;
             for (pair<int,int>& exit : currentLocation.getLocatExits()) {
                 if (exit.first == direction)
                 {
@@ -265,14 +292,15 @@ public:
                             if (location.checkAccessible())
                                 gamePlayer.setPlayerLocation(location);
                             else {
-                                cout << "\t\t\tYou can't go this way at the moment, you're blocked.\n\n";
-                                break;
+                                cout << "\t\t\tYou can't go this way at the moment\n";
+                                cout << "\t\t\t" << currentLocation.getDoor(direction).get_itemName() << " is locked, you'll need to unlock it first.\n" << endl;
+                                blocked = true;
                             }
                         }
                     }
                 }
             }
-            if (gamePlayer.didNotMove()) {
+            if (gamePlayer.didNotMove(currentLocation) && !blocked) {
                 cout << "\t\t\tThere is nothing in that direction\n\n\n";
             }
         }
@@ -290,6 +318,28 @@ public:
             if (playerInput == "" || playerInput == "y")
             {
                 printVector(centerVectorString(instructions));
+            }
+        }
+
+        //
+        void executeCommand(Command command, int action) {
+            switch (action)
+            {
+            case 0:     cout << "\n\t\tNo Command Detected\n\n";
+                break;
+            case -1:    endGame();
+                break;
+            case -2:    getHelp();
+                break;
+            case 1:     navigate(command(Directions::north));
+                break;
+            case 2:     navigate(command(Directions::east));
+                break;
+            case 3:     navigate(static_cast<int>(Directions::west));
+                break;
+            case 4:     navigate(static_cast<int>(Directions::south));
+                break;
+            
             }
         }
 

@@ -3,6 +3,7 @@
 #include<unordered_map>
 #include<unordered_set>
 #include"Direction.h"
+#include"Item.h"
 #pragma once
 
 using namespace std;

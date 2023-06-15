@@ -1,4 +1,6 @@
 #include<string>
+#include<vector>
+#include<iostream>
 
 #pragma once
 
@@ -8,11 +10,67 @@ class Item
 {
 	private:
 		string itemName;
-		bool usable;
-		string itemDescription;
+		bool usable = false, locked = true;
+		int doorDirection = 0, itemType = 0;
+		string itemDescription, useOn, eventSuccess, eventFail;
+		vector<Item> contained;
 
 	public:
-		Item(string name = "", bool use = false, string desc = "") : itemName(name), usable(use), itemDescription(desc) {}
+
+		// For initializing usable items
+		Item createObject(
+			string name = "",
+			bool use = false,
+			string useOnObject = "",
+			string desc = ""
+		){
+			Item item;
+			item.itemType = 1;
+			item.itemName = name;
+			item.usable = use;
+			item.itemDescription = desc;
+			item.useOn = useOnObject;
+			return item;
+		}
+
+		// to initialize container items
+		Item createContainer(
+			string name = "",
+			bool lock = true,
+			string open = "",
+			string fail = "",
+			vector<Item> itemsInside = {},
+			string description = ""
+		){
+			Item item;
+			item.itemType = 2;
+			item.itemName = name;
+			item.locked = lock;
+			item.eventSuccess = open;
+			item.eventFail = fail;
+			item.contained = itemsInside;
+			item.itemDescription = description;
+			return item;
+		}
+
+		// to initalize doors
+		Item createDoor(
+			string doorName = "",
+			int direction = 0,
+			bool _locked = true,
+			string open = "",
+			string description = ""
+		){
+			Item item;
+			item.itemType = 3;
+			item.itemName = doorName;
+			item.doorDirection = direction;
+			item.locked = _locked;
+			item.eventSuccess = open;
+			item.itemDescription = description;
+			return item;
+		}
+
 		
 		string get_itemName() {
 			return itemName;
@@ -24,6 +82,24 @@ class Item
 
 		bool checkUsable() {
 			return usable;
+		}
+
+		int getItemType() {
+			return itemType;
+		}
+
+		int getDoorDirection() {
+			if (itemType == 3) {
+				return doorDirection;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		void eventSucceeds() {
+			cout << "\t\t" << eventSuccess << endl;
 		}
 };
 

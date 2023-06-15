@@ -54,6 +54,15 @@ class Location
 			}
 		}
 
+		Item getDoor(int direction) {
+			for (Item item : itemsInLocation()) {
+				if (item.getDoorDirection() == direction) {
+					return item;
+				}
+			}
+			return {};
+		}
+
 		vector<string> getLocatDesc() {
 			return locationDesc;
 		}
@@ -61,5 +70,7 @@ class Location
 		vector<pair<int, int>> getLocatExits() {
 			return locationExits;
 		}
+
+		
 };
 
