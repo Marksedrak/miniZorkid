@@ -11,7 +11,7 @@ class World
 
 	public:
 		// World constructor
-		World(vector<Location> locations = {}) {}
+		World(vector<Location> locations = {}): areas(locations) {}
 
 		void add_location(const Location& location) {
 			areas.push_back(location);

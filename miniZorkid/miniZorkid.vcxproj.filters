@@ -38,8 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="useItems.json" />
-    <None Include="interactItems.json" />
     <None Include="locations.json" />
   </ItemGroup>
   <ItemGroup>

@@ -139,9 +139,7 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="interactItems.json" />
     <None Include="locations.json" />
-    <None Include="useItems.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Command.h" />

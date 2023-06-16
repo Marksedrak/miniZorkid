@@ -2,6 +2,7 @@
 #include<vector>
 #include"Item.h"
 #include<iostream>
+#include<algorithm>
 #pragma once
 
 using namespace std;
@@ -48,9 +49,17 @@ class Location
 		}
 
 		void printItems() {
+			if (items.empty()) {
+				cout << "\t\tThere are no items here\n\n";
+			}
 			for (Item item : itemsInLocation()) {
 				cout << "\t\tThere is a " << item.get_itemName() << ":\n";
 				cout << "\t\t" << item.get_itemDesc() << endl;
+				for (Item subItem : item.getContained()) {
+					cout << "\t\tInside " << item.get_itemName() << ":\n";
+					cout << "\t\t\tThere is a " << item.get_itemName() << ":\n";
+					cout << "\t\t\t" << item.get_itemDesc() << endl;
+				}
 			}
 		}
 
@@ -71,6 +80,26 @@ class Location
 			return locationExits;
 		}
 
-		
+		void itemDropped(Item item) {
+			items.push_back(item);
+		}
+
+		void removeItem(Item item) {
+			auto it = std::find(this->items.begin(), this->items.end(), item);
+			if (it != this->items.end()) {
+				cout << "\t\tTaking " << item.get_itemName() << " from " << locationName << "\n\n";
+				this->items.erase(it);
+			}
+		}
+
+		void openContainer(Item item) {
+			for (Item containedItem : item.getContained()) {
+				itemDropped(containedItem);
+			}
+		}
+
+		void openDoor() {
+			accessible = true;
+		}
 };
 

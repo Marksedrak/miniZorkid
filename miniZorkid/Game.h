@@ -62,6 +62,7 @@ public:
         }
 
 
+
         // get World
         World getWorldMap() { return gameWorld; }
 
@@ -94,18 +95,17 @@ public:
             }
         }
 
-        /// <summary>
+        /// Function: loadItems
         ///     Function loads items in a location using their specific type as reference
-        /// </summary>
-        /// <param name="locationData">
-        ///     locationData is a reference to a Value in the json file    
-        /// </param>
-        /// <param name="container">
-        ///     container is the name of the member of which the items are located
-        /// </param>
-        /// <returns>
+        ///
+        /// Parameters:
+        ///     locationData
+        ///         locationData is a reference to a Value in the json file
+        ///     container
+        ///         container is the name of the member of which the items are located
+        /// Returns:
         ///     Returns a vector of Items in each location.
-        /// </returns>
+       
         vector<Item> loadItems(const Json::Value& locationData, string container) {
             vector<Item> locationItems;
             for (const Json::Value& items : locationData[container]) {
@@ -129,7 +129,9 @@ public:
                     locked = items["locked"].asBool();
                     opened = items["opened"].asString();
                     fail = items["fail"].asString();
-                    contained = loadItems(items, "contained");
+                    if(items.isMember("contained")){
+                        contained = loadItems(items, "contained");
+                    }
                     item = item.createContainer(name, locked, opened, fail, contained, description);
                     break;
                 case 3:   name = items["name"].asString();
@@ -137,7 +139,8 @@ public:
                     description = items["description"].asString();
                     locked = items["locked"].asBool();
                     opened = items["opened"].asString();
-                    item = item.createDoor(name, direction, locked, opened, description);
+                    fail = items["fail"].asString();
+                    item = item.createDoor(name, direction, locked, opened, fail, description);
                     break;
                 }
                 locationItems.push_back(item);
@@ -196,7 +199,7 @@ public:
 
                     Location area(id, name, accessible, locationItems, disc, exits);
 
-                    this->gameWorld.add_location(area);
+                    gameWorld.add_location(area);
                 }
 
                 return true;
@@ -212,8 +215,6 @@ public:
             Function that runs the game and manages it
         */
         bool gameStart() {
-            Location currentLocation;
-
             // Printing out Welcome text, instructions, and beginning text
             printVector(centerVectorString(welcomeText));
             printVector(centerVectorString(instructions));
@@ -223,11 +224,11 @@ public:
             // GAME START / Game Running
             while (gameState)
             {
-                currentLocation = gamePlayer.locate_Player();
-                cout << "\t\t" << currentLocation.getLocationName() << ":" << endl << endl;
-                printVector(centerVectorString(currentLocation.getLocatDesc()));
-                currentLocation.printItems();
-
+                cout << "\t\t" << gamePlayer.locate_Player().getLocationName() << ":" << endl << endl;
+                printVector(centerVectorString(gamePlayer.locate_Player().getLocatDesc()));
+                cout << "\n\n\n";
+                gamePlayer.locate_Player().printItems();
+                cout << "\n\n\n";
                 // converts all input to lowercase for easier processing
                 takeUserInput();
                 cout << endl;
@@ -284,8 +285,8 @@ public:
             bool blocked = false;
             for (pair<int,int>& exit : currentLocation.getLocatExits()) {
                 if (exit.first == direction)
-                {
-                    for (Location &location : getWorldMap().get_locations())
+                {   
+                    for (Location& location : getWorldMap().get_locations())
                     {
                         if (location.getLocationId() == exit.second)
                         {
@@ -293,7 +294,8 @@ public:
                                 gamePlayer.setPlayerLocation(location);
                             else {
                                 cout << "\t\t\tYou can't go this way at the moment\n";
-                                cout << "\t\t\t" << currentLocation.getDoor(direction).get_itemName() << " is locked, you'll need to unlock it first.\n" << endl;
+                                cout << "\t\t\t" << currentLocation.getDoor(direction).get_itemName() << " is locked,"
+                                    << " you'll need to unlock it first.\n" << endl;
                                 blocked = true;
                             }
                         }
@@ -321,8 +323,9 @@ public:
             }
         }
 
-        //
+        // Function takes command and calls appropriate function to execute it.
         void executeCommand(Command command, int action) {
+            Item item;
             switch (action)
             {
             case 0:     cout << "\n\t\tNo Command Detected\n\n";
@@ -331,15 +334,26 @@ public:
                 break;
             case -2:    getHelp();
                 break;
+            case -3:    cout << "\t\tPlayer's Inventory:" << endl << endl;
+                printVector((centerVectorString(gamePlayer.getInventItemNames())));
+                break;
             case 1:     navigate(command(Directions::north));
                 break;
             case 2:     navigate(command(Directions::east));
                 break;
-            case 3:     navigate(static_cast<int>(Directions::west));
+            case 3:     navigate(command(Directions::west));
                 break;
-            case 4:     navigate(static_cast<int>(Directions::south));
+            case 4:     navigate(command(Directions::south));
                 break;
-            
+            case 5:     
+                        item = command(gamePlayer.locate_Player());
+                        gamePlayer.pickUpItem(item);
+                break;
+            case 6:     command(gamePlayer.locate_Player(), gamePlayer);
+                break;
+
+            case 7:     command(gamePlayer, gamePlayer.locate_Player(), gameWorld);
+                break;
             }
         }
 

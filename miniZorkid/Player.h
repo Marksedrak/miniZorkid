@@ -1,6 +1,7 @@
-#include "World.h"
+#include "Location.h"
 #include "Item.h"
 #include <vector>
+#include <iostream>
 
 #pragma once
 class Player
@@ -20,7 +21,7 @@ class Player
 
 		vector<Item> getInventory() { return Inventory; }
 
-		void setPlayerLocation(const Location& destination) {
+		void setPlayerLocation(Location destination) {
 			lastLocation = playerLocation;
 			playerLocation = destination;
 		}
@@ -29,12 +30,43 @@ class Player
 			return current.getLocationId() == playerLocation.getLocationId();
 		}
 
-		vector<string> getInventItems() {
-			vector<string> itemNames;
-			for (auto item : Inventory) {
-				itemNames.push_back(item.get_itemName());
+		vector<string> getInventItemNames() {
+			if (Inventory.empty()) {
+				return { "Such Empty" };
 			}
-			return itemNames;
+			else
+			{
+				vector<string> itemNames;
+				for (auto item : Inventory) {
+					itemNames.push_back(item.get_itemName());
+				}
+				return itemNames;
+			}
 		}
+
+		void pickUpItem(Item item) {
+			if (item.isEmpty()) {
+				cout << "\t\tNo valid item name detected" << endl << "\t\tPlease enter a valid item name after your command\n\n\n";
+			}
+			else {
+				if (item.getItemType() != 1) {
+					cout << "\t\tCan't pick up " << item.get_itemName() << "\n\n\n";
+				}
+				else {
+					Inventory.push_back(item);
+					playerLocation.removeItem(item);
+				}
+			}
+		}
+
+		void dropItem(Item item) {
+			auto it = find(Inventory.begin(), Inventory.end(), item);
+			if (it != Inventory.end()) {
+				cout << "\t\tDropping " << item.get_itemName() << "\n\n\n";
+				Inventory.erase(it);
+				playerLocation.itemDropped(item);
+			}
+		}
+
 };
 

@@ -48,6 +48,7 @@
           "name": "bronze door",
           "locked": true,
           "opened": "You open the large Bronze Door\n",
+          "fail": "Could not open door, maybe true a key similar to the door\n",
           "description": "A large bronze door"
         }
       ],
@@ -80,7 +81,7 @@
         {
           "type": 3,
           "direction": 4,
-          "name": "Janitor's Closet Door",
+          "name": "janitor's closet door",
           "locked": false,
           "opened": "You open the large Bronze Door\n",
           "description": "A very generic door with a small sign which says \"Janitor's Closet\"\n"
@@ -133,7 +134,7 @@
           "type": 1,
           "name": "hammer",
           "useable": true,
-          "description": "A surgical hammer which looks small but mighty.",
+          "description": "A small hammer, but still packs a punch.\n",
           "useOn": "mirror"
         }
       ],
@@ -142,8 +143,8 @@
       ],
       "exits": [
         {
-          "destination": 2,
-          "direction": 2
+          "destination": 3,
+          "direction": 1
         }
       ]
     }
