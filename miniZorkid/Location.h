@@ -112,6 +112,7 @@ class Location
 
 		void openDoor() {
 			accessible = true;
+			cout << "\t\tYou can now access " << this->locationName << "\n\n";
 		}
 };
 

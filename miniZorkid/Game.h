@@ -299,7 +299,7 @@ public:
             for (pair<int,int>& exit : currentLocation.getLocatExits()) {
                 if (exit.first == direction)
                 {   
-                    for (Location& location : getWorldMap().get_locations())
+                    for (Location& location : gameWorld.get_locations())
                     {
                         if (location.getLocationId() == exit.second)
                         {
@@ -367,6 +367,8 @@ public:
                 break;
 
             case 7:     command(gamePlayer, gamePlayer.locate_Player(), getWorldMap());
+                if (!gamePlayer.locate_Player().checkAccessible())
+                    gamePlayer.locate_Player().openDoor();
                 break;
             }
         }

@@ -169,6 +169,7 @@ class Command
 										if (area.getLocationId() == exit.second)
 										{
 											area.openDoor();
+											player.setPlayerLocation(area);
 										}
 									}
 								}
