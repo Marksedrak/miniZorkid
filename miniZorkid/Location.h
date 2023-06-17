@@ -48,21 +48,26 @@ class Location
 			return items;
 		}
 
+		// Prints all location items, and contained items if container is open.
 		void printItems() {
 			if (items.empty()) {
 				cout << "\t\tThere are no items here\n\n";
 			}
-			for (Item item : itemsInLocation()) {
-				cout << "\t\tThere is a " << item.get_itemName() << ":\n";
-				cout << "\t\t" << item.get_itemDesc() << endl;
-				for (Item subItem : item.getContained()) {
-					cout << "\t\tInside " << item.get_itemName() << ":\n";
-					cout << "\t\t\tThere is a " << item.get_itemName() << ":\n";
-					cout << "\t\t\t" << item.get_itemDesc() << endl;
+			for (Item item : items) {
+				cout << "\t\tThere is a " << item.get_itemName() << ":\n\n";
+				cout << "\t\t\t" << item.get_itemDesc() << endl;
+				if (!item.getContained().empty())
+				cout << "\t\tInside " << item.get_itemName() << ":\n";
+				{
+					for (Item subItem : item.getContained()) {
+						cout << "\t\t\tThere is a " << subItem.get_itemName() << ":\n";
+						cout << "\t\t\t\t" << subItem.get_itemDesc() << endl << endl;
+					}
 				}
 			}
 		}
 
+		// Gets which Door item is in parameter direction
 		Item getDoor(int direction) {
 			for (Item item : itemsInLocation()) {
 				if (item.getDoorDirection() == direction) {
@@ -80,10 +85,12 @@ class Location
 			return locationExits;
 		}
 
+		// Called when player drops item here
 		void itemDropped(Item item) {
 			items.push_back(item);
 		}
 
+		// Called when player picks up item from this location
 		void removeItem(Item item) {
 			auto it = std::find(this->items.begin(), this->items.end(), item);
 			if (it != this->items.end()) {
@@ -92,6 +99,7 @@ class Location
 			}
 		}
 
+		// Adds contained
 		void openContainer(Item item) {
 			for (Item containedItem : item.getContained()) {
 				itemDropped(containedItem);

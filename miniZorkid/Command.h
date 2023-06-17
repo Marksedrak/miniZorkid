@@ -91,10 +91,13 @@ class Command
 			return 0;
 		}
 
+
+		// Simply transforms from enum type Direction to int for easier navigation.
 		int operator()(Directions direction) {
 			return static_cast<int>(direction);
 		}
-
+		
+		// Operator overload used when player attempts to pick up item
 		Item operator()(Location location) {
 			for (Item item : location.itemsInLocation()) {
 				auto itr = command.find((item.get_itemName()));
@@ -105,6 +108,7 @@ class Command
 			return {};
 		}
 
+		// Called when player drops an item
 		void operator()(Location location, Player& player){
 			bool itemDropped = false;
 			for (Item item : player.getInventory()) {
@@ -122,6 +126,7 @@ class Command
 			}
 		}
 
+		// operator overload when player uses an item.
 		void operator()(Player& player, Location location, World& world) {
 			Item itemToUse = {};
 			Item usedOn = {};

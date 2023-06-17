@@ -90,6 +90,12 @@ class Item
 			return usable;
 		}
 
+		void addContainedItems(const vector<Item>& containedItems) {
+			for (Item item : containedItems) {
+				this->contained.push_back(item);
+			}
+		}
+
 		int getItemType() {
 			return itemType;
 		}

@@ -32,8 +32,9 @@
         "*         To use items: use command \"use (item) on (item)\"       *\n",
         "*         If at anytime you need help with these commands,       *\n",
         "*                                                                *\n",
+        "*             Type \"I\" or \"i\" to access your inventory           *\n",
         "*                                                                *\n",
-        "*                  type 'H' or \"help\"                            *\n",
+        "*                      type 'H' or \"help\"                        *\n",
         "******************************************************************\n",
         "\n\n"
     };
@@ -116,43 +117,44 @@ public:
         /// Returns:
         ///     Returns a vector of Items in each location.
        
-        vector<Item> loadItems(const Json::Value& locationData, string container) {
+        vector<Item> loadItems(const Json::Value& locationData) {
             vector<Item> locationItems;
-            for (const Json::Value& items : locationData[container]) {
-                int type = items["type"].asInt();
+            for (const Json::Value& itemData : locationData) {
+                int type = itemData["type"].asInt();
                 Item item;
                 string name, description, useOn, opened, fail;
                 bool locked, useable;
                 vector<Item> contained;
-
                 switch (type)
                 {
                 case 1:
-                    name = items["name"].asString();
-                    useable = items["useable"].asBool();
-                    useOn = items["useOn"].asString();
-                    description = items["description"].asString();
+                    name = itemData["name"].asString();
+                    useable = itemData["useable"].asBool();
+                    useOn = itemData["useOn"].asString();
+                    description = itemData["description"].asString();
                     item = item.createObject(name, useable, useOn, description);
                     break;
-                case 2:     name = items["name"].asString();
-                    description = items["description"].asString();
-                    locked = items["locked"].asBool();
-                    opened = items["opened"].asString();
-                    fail = items["fail"].asString();
-                    if(items.isMember("contained")){
-                        contained = loadItems(items, "contained");
-                    }
+                case 2:     name = itemData["name"].asString();
+                    description = itemData["description"].asString();
+                    locked = itemData["locked"].asBool();
+                    opened = itemData["opened"].asString();
+                    fail = itemData["fail"].asString();
+
+                    // Recursively calls loadItems for contained items to load contained
+                    contained = loadItems(itemData["contained"]);
                     item = item.createContainer(name, locked, opened, fail, contained, description);
                     break;
-                case 3:   name = items["name"].asString();
-                    int direction = items["direction"].asInt();
-                    description = items["description"].asString();
-                    locked = items["locked"].asBool();
-                    opened = items["opened"].asString();
-                    fail = items["fail"].asString();
+                case 3:   name = itemData["name"].asString();
+                    int direction = itemData["direction"].asInt();
+                    description = itemData["description"].asString();
+                    locked = itemData["locked"].asBool();
+                    opened = itemData["opened"].asString();
+                    fail = itemData["fail"].asString();
                     item = item.createDoor(name, direction, locked, opened, fail, description);
                     break;
                 }
+
+                // Checks if there is a contained member and loads the contained vector with the items
                 locationItems.push_back(item);
             }
             return locationItems;
@@ -173,7 +175,7 @@ public:
                 Json::Value locations;
                 configFile >> locations;
 
-                // Creates a reference to the locations' json data
+                // Creates a reference to the locations json data
                 const Json::Value& locationArray = locations["locations"];
 
                 // Creates areas and populating the fields using the json data
@@ -185,7 +187,7 @@ public:
                     // Checks if this location has items and loops through if it does
                     vector<Item> locationItems;
                     if (locationData.isMember("items")) {
-                        locationItems = loadItems(locationData, "items");
+                        locationItems = loadItems(locationData["items"]);
                     }
                     vector<string> disc;
                     // For loop to populate string vector for description
@@ -234,6 +236,7 @@ public:
             // GAME START / Game Running
             while (gameState)
             {
+                cout << "***********************************************************************************************************************\n";
                 cout << "\t\t" << gamePlayer.locate_Player().getLocationName() << ":" << endl << endl;
                 printVector(centerVectorString(gamePlayer.locate_Player().getLocatDesc()));
                 cout << "\n\n\n";
@@ -344,8 +347,9 @@ public:
                 break;
             case -2:    getHelp();
                 break;
-            case -3:    cout << "\t\tPlayer's Inventory:" << endl << endl;
+            case -3:    cout << "\t\tPlayer's Inventory:\n\n\n";
                 printVector((centerVectorString(gamePlayer.getInventItemNames())));
+                cout << "\n\n";
                 break;
             case 1:     navigate(command(Directions::north));
                 break;
