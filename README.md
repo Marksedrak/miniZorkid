@@ -1,5 +1,6 @@
 # miniZorkid
-A mini version of the game Zork created from scratch using C++ and and configuration files
+A mini version of the game Zork created from scratch using C++ and configuration files
+As of 6/16/2023 at 11:26 PM, the game is technically complete and fully functional. New content may be added over time.
 
 Hello and welcome to Mini Zork.
 
