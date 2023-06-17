@@ -15,7 +15,7 @@ class Player
 	public:
 		Player(int id, Location playerLocat = {}, Location last = {}, vector<Item> invent = {}) : playerId(id), playerLocation(playerLocat), Inventory(invent) {}
 
-		Location locate_Player() { return playerLocation; }
+		Location& locate_Player() { return playerLocation; }
 
 		Location getLastLocation() { return lastLocation; }
 

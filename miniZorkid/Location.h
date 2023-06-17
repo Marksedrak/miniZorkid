@@ -100,9 +100,13 @@ class Location
 		}
 
 		// Adds contained
-		void openContainer(Item item) {
-			for (Item containedItem : item.getContained()) {
-				itemDropped(containedItem);
+		void openContainer(Item& item) {
+			item.open();
+			if (item.getItemType() == 2)
+			{
+				for (const Item& containedItem : item.getContained()) {
+					itemDropped(containedItem);
+				}
 			}
 		}
 

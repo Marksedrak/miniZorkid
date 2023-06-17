@@ -9,7 +9,7 @@
           "type": 2,
           "name": "mirror",
           "locked": true,
-          "opened": "You crack the mirror with the hammer, and see look inside to find.\n",
+          "opened": "You crack the mirror with the hammer, and see look inside to find a bronze key\n",
           "fail": "The mirror is unaffected, maybe use another item.\n",
           "contained": [
             {
@@ -48,7 +48,7 @@
           "name": "bronze door",
           "locked": true,
           "opened": "You open the large Bronze Door\n",
-          "fail": "Could not open door, maybe true a key similar to the door\n",
+          "fail": "Could not open door, maybe try a key similar to the door\n",
           "description": "A large bronze door"
         }
       ],
@@ -78,14 +78,6 @@
       "name": "Hallway East",
       "accessible": true,
       "items": [
-        {
-          "type": 3,
-          "direction": 4,
-          "name": "janitor's closet door",
-          "locked": false,
-          "opened": "You open the large Bronze Door\n",
-          "description": "A very generic door with a small sign which says \"Janitor's Closet\"\n"
-        }
       ],
       "description": [
         "You reach another flickering light in the long hallway with nothing around except for\n",

@@ -75,7 +75,7 @@ public:
 
 
         // get World
-        World getWorldMap() { return gameWorld; }
+        World& getWorldMap() { return gameWorld; }
 
         // Get player
         Player getPlayer() { return gamePlayer; }
@@ -366,7 +366,7 @@ public:
             case 6:     command(gamePlayer.locate_Player(), gamePlayer);
                 break;
 
-            case 7:     command(gamePlayer, gamePlayer.locate_Player(), gameWorld);
+            case 7:     command(gamePlayer, gamePlayer.locate_Player(), getWorldMap());
                 break;
             }
         }

@@ -127,9 +127,11 @@ class Command
 		}
 
 		// operator overload when player uses an item.
-		void operator()(Player& player, Location location, World& world) {
+		void operator()(Player& player, Location& location, World& world) {
 			Item itemToUse;
 			Item usedOn;
+			
+			// Checks if user entered an item in their inventory as the item they want to use 
 			for (Item& item : player.getInventory()) {
 				auto itr = command.find((item.get_itemName()));
 				if (itr != command.npos) {
@@ -139,6 +141,9 @@ class Command
 			if (itemToUse.isEmpty()) {
 				cout << "\t\tNo such item in your inventory\n\n\n";
 			}
+
+			// Checks for second item, item which the first is being used on, is in the location
+			// and is compatible with used item or not.
 			else {
 				for (Item& item : location.itemsInLocation()) {
 					auto itr = command.find((item.get_itemName()));
@@ -146,25 +151,33 @@ class Command
 						usedOn = item;
 					}
 				}
-				if (usedOn.get_itemName() == itemToUse.get_usedOn()) {
-					usedOn.open();
-					if (usedOn.getItemType() == 2)
-					{
-						player.locate_Player().openContainer(usedOn);
-					}
-					else {
-						for (pair<int, int>& exit : location.getLocatExits()) {
-							if (exit.first == usedOn.getDoorDirection())
-							{
-								for (Location& area : world.get_locations())
+				if (usedOn.isEmpty()) {
+					cout << "\t\tSecond item doesn't exist here.\n\n\n";
+				}
+				else
+				{
+					// Checks if the item being used can be used on second item
+					if (usedOn.get_itemName() == itemToUse.get_usedOn()) {
+						location.openContainer(usedOn);
+						if (usedOn.getItemType() == 3)
+						{
+							for (pair<int, int>& exit : location.getLocatExits()) {
+								if (exit.first == usedOn.getDoorDirection())
 								{
-									if (area.getLocationId() == exit.second)
+									for (Location& area : world.get_locations())
 									{
-										area.openDoor();
+										if (area.getLocationId() == exit.second)
+										{
+											area.openDoor();
+										}
 									}
 								}
 							}
 						}
+					}
+					else {
+						usedOn.eventFails();
+						cout << "\t\tItem " << itemToUse.get_itemName() << " can't be used on " << usedOn.get_itemName() << "\n\n\n";
 					}
 				}
 			}
