@@ -8,7 +8,7 @@
         {
           "type": 2,
           "name": "mirror",
-          "locked": false,
+          "locked": true,
           "opened": "You crack the mirror with the hammer, and see look inside to find.\n",
           "fail": "The mirror is unaffected, maybe use another item.\n",
           "contained": [

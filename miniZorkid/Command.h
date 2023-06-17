@@ -128,9 +128,9 @@ class Command
 
 		// operator overload when player uses an item.
 		void operator()(Player& player, Location location, World& world) {
-			Item itemToUse = {};
-			Item usedOn = {};
-			for (Item item : player.getInventory()) {
+			Item itemToUse;
+			Item usedOn;
+			for (Item& item : player.getInventory()) {
 				auto itr = command.find((item.get_itemName()));
 				if (itr != command.npos) {
 					itemToUse = item;
@@ -140,7 +140,7 @@ class Command
 				cout << "\t\tNo such item in your inventory\n\n\n";
 			}
 			else {
-				for (Item item : location.itemsInLocation()) {
+				for (Item& item : location.itemsInLocation()) {
 					auto itr = command.find((item.get_itemName()));
 					if (itr != command.npos) {
 						usedOn = item;
@@ -150,7 +150,7 @@ class Command
 					usedOn.open();
 					if (usedOn.getItemType() == 2)
 					{
-						location.openContainer(usedOn);
+						player.locate_Player().openContainer(usedOn);
 					}
 					else {
 						for (pair<int, int>& exit : location.getLocatExits()) {
